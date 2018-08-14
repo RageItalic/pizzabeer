@@ -1,7 +1,13 @@
-import React from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, ActivityIndicator, Image, Alert } from 'react-native'
+import { Container, Header, Title, Content, DeckSwiper, Card, CardItem, Thumbnail, Footer, FooterTab, Button, Left, Right, Body, Icon } from 'native-base'
+import {MapView} from 'expo'
 import axios from 'axios'
+import moment from 'moment'
+import SvgUri from 'react-native-svg-uri'
 import { upcomingEventsNearYou } from './helpers/filters'
+import OptionHeader from './components/OptionHeader'
+import EventList from './components/EventList'
 
 export default class App extends React.Component {
   state = {
@@ -15,131 +21,103 @@ export default class App extends React.Component {
 
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
-      (res) => this.setState({ lat: String(res.coords.latitude), lon: String(res.coords.longitude) }),
-      // errorCallback,
-      // options
+      (res) => this.setState({ lat: String(res.coords.latitude), lon: String(res.coords.longitude) })
     )
   }
 
+  onOptionPress = (option) => {
+    this.setState({ view: option, loading: true })
 
-  onPizzaClick = async () => {
-    this.setState({ view: 'pizza', loading: true })
-
-    const url = 'https://api.meetup.com/find/upcoming_events?photo-host=public&page=300&sig_id=185976458&lon=+-79.3790878&lat=43.6509254&sig=fc07d85773806ffd380510233af5574390228f2c'
+    const url = `https://api.meetup.com/find/upcoming_events?photo-host=public&page=300&sig_id=185976458&lon=+${this.state.lon}&lat=${this.state.lat}&sig=fc07d85773806ffd380510233af5574390228f2c`
     axios.get(url)
-      .then(res => upcomingEventsNearYou(res, 'pizza'))
-      .then(pizzaList => {
-        this.setState({
-          pizzaList,
+      .then(res => upcomingEventsNearYou(res, option))
+      .then(eventList => {
+        if (option === 'pizza') {
+          return this.setState({
+            pizzaList: eventList,
+            loading: false
+          })
+        }
+
+        return this.setState({
+          beerList: eventList,
           loading: false
         })
       })
-      .catch(err => console.log('NETWORK ERROR', err))
-  }
-
-  onBeerClick = () => {
-    this.setState({ view: 'beer', loading: true })
-
-    const url = 'https://api.meetup.com/find/upcoming_events?photo-host=public&page=300&sig_id=185976458&lon=+-79.3790878&lat=43.6509254&sig=fc07d85773806ffd380510233af5574390228f2c'
-    axios.get(url)
-      .then(res => upcomingEventsNearYou(res, 'beer'))
-      .then(beerList => {
-        this.setState({
-          beerList,
-          loading: false,
-        })
+      .catch(err => {
+        console.log('NETWORK ERROR', err) 
+        Alert.alert("There has been an error. Please try again Later.")
       })
-      .catch(err => console.log('NETWORK ERROR', err))
   }
 
 
-  onBackClick = () => {
+  onBackPress = () => {
     this.setState({ view: 'mainMenu' })
   }
 
   render() {
     if (this.state.view === 'pizza') {
+      console.log(this.state.pizzaList)
       return (
-        <View style={styles.container}>
-          <View style={styles.centerText}>
-            <TouchableOpacity onPress={() => this.onBackClick()} style={{ marginTop: 30 }}>
-              <Text>
-                {'< Back'}
-              </Text>
-            </TouchableOpacity>
-            {this.state.loading ? <ActivityIndicator size="large"/> : <ScrollView>
-              <Text style={styles.centerText}>
-                Upcoming Events with Pizza Near You
-              </Text>
-              {this.state.pizzaList.map(pizzaEvent => {
-                return (
-                <View  style={{
-                  borderBottomWidth: 1,
-                  borderBottomColor: 'black'
-                }} key={pizzaEvent.id}>
-                  <Text key={pizzaEvent.id}>
-                    {pizzaEvent.name}
-                  </Text>
-                </View>
-                )
-              })}
-            </ScrollView>}
-          </View>
-        </View>
+        <Container>
+          <OptionHeader onBackPress={this.onBackPress} title="Pizza" />
+          <Content>
+            {this.state.loading 
+              ? <ActivityIndicator 
+                  size="large" 
+                  style={{marginTop: 30}}
+                /> 
+              : <EventList 
+                  events={this.state.pizzaList} 
+                  svg={require('./svgs/Pizza.svg')} 
+                />
+            }
+          </Content>
+        </Container>
       )
     }
+
     if (this.state.view === 'beer') {
       return (
-        <View style={styles.container}>
-          <TouchableOpacity onPress={() => this.onBackClick()} style={{ marginTop: 30 }}>
-            <Text>
-              {'< Back'}
-            </Text>
-          </TouchableOpacity>
-          {this.state.loading ? <ActivityIndicator size="large"/> : <ScrollView>
-            <Text style={styles.centerText}>
-              Upcoming Events with Free Beer Near You
-            </Text>
-            {this.state.beerList.map(beerEvent => {
-              return (
-                <View  style={{
-                  borderBottomWidth: 1,
-                  borderBottomColor: 'black'
-                }} key={beerEvent.id}>
-                <Text>
-                  {beerEvent.name}
-                </Text>
-                </View>
-              )
-            })}
-          </ScrollView>}
-        </View>
+        <Container>
+          <OptionHeader onBackPress={this.onBackPress} title="Beer" />
+          <Content>
+            {this.state.loading 
+              ? <ActivityIndicator 
+                  size="large" 
+                  style={{marginTop: 30}}
+                /> 
+              : <EventList 
+                  events={this.state.beerList} 
+                  svg={require('./svgs/Beer.svg')} 
+                />
+            }
+          </Content>
+        </Container>
       )
     }
 
     return (
-      <View style={styles.container}>
-
-        <View style={styles.pizza}>
-          <TouchableOpacity onPress={() => this.onPizzaClick()}>
-            <Text style={styles.icon}>
-              🍕
-            </Text>
+      <Container>
+        <Container style={styles.pizza}>
+          <TouchableOpacity onPress={() => this.onOptionPress('pizza')}>
+            <SvgUri width="150" height="150" source={require('./svgs/Pizza.svg')} />
           </TouchableOpacity>
-        </View>
-        <View style={styles.beer}>
-          <TouchableOpacity onPress={() => this.onBeerClick()}>
-            <Text style={styles.icon}>
-              🍺
-            </Text>
+        </Container>
+        <Container style={styles.beer}>
+          <TouchableOpacity onPress={() => this.onOptionPress('beer')}>
+            <SvgUri width="150" height="150" source={require('./svgs/Beer.svg')} />
           </TouchableOpacity>
-        </View>
-      </View>
-    );
+        </Container>
+      </Container>
+    )
   }
 }
 
 const styles = StyleSheet.create({
+  allText: {
+    fontFamily: 'System'
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -149,9 +127,6 @@ const styles = StyleSheet.create({
   },
   beer: {
     flex: 1,
-    borderTopWidth: 1,
-    borderTopColor: 'black',
-    backgroundColor: 'orange',
     height: 100,
     width: '100%',
     alignItems: 'center',
@@ -160,13 +135,9 @@ const styles = StyleSheet.create({
   pizza: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'red',
     height: 100,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    fontSize: 100,
+    justifyContent: 'center'
   },
   centerText: {
     flex: 1,
@@ -174,4 +145,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   }
-});
+})

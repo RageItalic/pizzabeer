@@ -21,7 +21,10 @@
   "dependencies": {
     "axios": "^0.18.0",
     "expo": "^25.0.0",
+    "moment": "^2.22.2",
+    "native-base": "^2.7.2",
     "react": "16.2.0",
-    "react-native": "0.52.0"
+    "react-native": "0.52.0",
+    "react-native-svg-uri": "^1.2.3"
   }
 }
