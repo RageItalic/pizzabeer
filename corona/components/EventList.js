@@ -1,12 +1,11 @@
 import React from 'react'
-import { View, StyleSheet, Text, Linking, Alert } from 'react-native'
+import { View, StyleSheet, Platform, Text, Linking, Alert } from 'react-native'
 import { Container, Header, Title, Content, DeckSwiper, Card, CardItem, Thumbnail, Footer, FooterTab, Button, Left, Right, Body, Icon } from 'native-base'
 import {MapView, Constants} from 'expo'
 import moment from 'moment'
 import SvgUri from 'react-native-svg-uri'
 
 export default function EventList ({events, svg}) {
-	console.log("?????????????????????????????????", Linking)
   return (
     <View>
       {events.map(item => {
@@ -16,8 +15,21 @@ export default function EventList ({events, svg}) {
               <Left>
                 <SvgUri width="50" height="50" source={svg} />
                 <Body>
-                  <Text style={{fontWeight: 'bold'}}>{item.name}</Text>
-                  <Text note>On {moment(item.local_date).format("MMM Do YYYY")}, at {item.local_time}</Text>
+                  <Text 
+	                  style={{
+	                  	fontWeight: 'bold',
+	    								fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto'
+										}}
+									>
+										{item.name}
+									</Text>
+                  <Text 
+                  	style={{
+	    									fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto'
+	  								}} note
+	  							>
+	  								On {moment(item.local_date).format("MMM Do YYYY")}, at {item.local_time}
+	  							</Text>
                 </Body>
               </Left>
             </CardItem>
@@ -37,7 +49,15 @@ export default function EventList ({events, svg}) {
               </MapView>
             </CardItem>
             <CardItem>
-              <Text>Interested in this event? Find more info</Text><Text onPress={() => Linking.openURL(item.link).catch(err => Alert.alert("There has been an unexpected error. Please try again later."))} style={{color: 'blue'}}> here!</Text>
+              <Text 
+              	style={{
+  								fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto'
+								}}
+              >Interested in this event? Find more info</Text><Text 
+              style={{
+								fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+								color: 'blue'
+							}} onPress={() => Linking.openURL(item.link).catch(err => Alert.alert("There has been an unexpected error. Please try again later."))}> here!</Text>
             </CardItem>
           </Card>
         )

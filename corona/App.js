@@ -115,9 +115,6 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  allText: {
-    fontFamily: 'System'
-  },
   container: {
     flex: 1,
     flexDirection: 'column',
