@@ -8,7 +8,7 @@ import SvgUri from 'react-native-svg-uri'
 import { upcomingEventsNearYou } from './helpers/filters'
 import OptionHeader from './components/OptionHeader'
 import EventList from './components/EventList'
-
+import { Font, AppLoading } from 'expo'
 export default class App extends React.Component {
   state = {
     lat: '',
@@ -16,7 +16,14 @@ export default class App extends React.Component {
     view: 'mainMenu', // mainMenu, pizza, beer
     pizzaList: [],
     beerList: [],
-    loading: false,
+    loading: true, //load fonts before app is used.
+  }
+
+  componentWillMount() {
+    //https://github.com/GeekyAnts/NativeBase/issues/1466
+    Font.loadAsync({
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    }).then(() => this.setState({ loading: false }))
   }
 
   componentDidMount() {
@@ -45,7 +52,7 @@ export default class App extends React.Component {
         })
       })
       .catch(err => {
-        console.log('NETWORK ERROR', err) 
+        console.log('NETWORK ERROR', err)
         Alert.alert("There has been an error. Please try again Later.")
       })
   }
@@ -56,20 +63,24 @@ export default class App extends React.Component {
   }
 
   render() {
+    if (this.state.view === 'mainMenu' && this.state.loading === true) {
+      return <AppLoading />
+    }
+
     if (this.state.view === 'pizza') {
       console.log(this.state.pizzaList)
       return (
         <Container>
           <OptionHeader onBackPress={this.onBackPress} title="Pizza" />
           <Content>
-            {this.state.loading 
-              ? <ActivityIndicator 
-                  size="large" 
+            {this.state.loading
+              ? <ActivityIndicator
+                  size="large"
                   style={{marginTop: 30}}
-                /> 
-              : <EventList 
-                  events={this.state.pizzaList} 
-                  svg={require('./svgs/Pizza.svg')} 
+                />
+              : <EventList
+                  events={this.state.pizzaList}
+                  svg={require('./svgs/Pizza.svg')}
                 />
             }
           </Content>
@@ -78,18 +89,19 @@ export default class App extends React.Component {
     }
 
     if (this.state.view === 'beer') {
+      console.log(this.state.beerList)
       return (
         <Container>
           <OptionHeader onBackPress={this.onBackPress} title="Beer" />
           <Content>
-            {this.state.loading 
-              ? <ActivityIndicator 
-                  size="large" 
+            {this.state.loading
+              ? <ActivityIndicator
+                  size="large"
                   style={{marginTop: 30}}
-                /> 
-              : <EventList 
-                  events={this.state.beerList} 
-                  svg={require('./svgs/Beer.svg')} 
+                />
+              : <EventList
+                  events={this.state.beerList}
+                  svg={require('./svgs/Beer.svg')}
                 />
             }
           </Content>
