@@ -35,7 +35,6 @@ export default function EventList ({events, svg}) {
             </CardItem>
             <CardItem cardBody>
               <MapView 
-                scrollEnabled={false}
                 pitchEnabled={false}
                 rotateEnabled={false}
                 style={styles.map}

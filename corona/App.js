@@ -9,6 +9,8 @@ import { upcomingEventsNearYou } from './helpers/filters'
 import OptionHeader from './components/OptionHeader'
 import EventList from './components/EventList'
 import { Font, AppLoading } from 'expo'
+
+
 export default class App extends React.Component {
   state = {
     lat: '',
