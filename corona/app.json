@@ -1,5 +1,11 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
+  	"name": "Grub.",
+    "sdkVersion": "25.0.0",
+    "icon": "./icon/GrubIcon.png",
+    "version": "1.0.0",
+    "ios": {
+    	"bundleIdentifier": "com.companyname.appname"
+    }
   }
 }

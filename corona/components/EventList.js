@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Platform, Text, Linking, Alert } from 'react-native'
-import { Container, Header, Title, Content, DeckSwiper, Card, CardItem, Thumbnail, Footer, FooterTab, Button, Left, Right, Body, Icon } from 'native-base'
+import { Container, Header, Title, Content, Card, CardItem, Thumbnail, Footer, FooterTab, Button, Left, Right, Body, Icon } from 'native-base'
 import {MapView, Constants} from 'expo'
 import moment from 'moment'
 import SvgUri from 'react-native-svg-uri'
