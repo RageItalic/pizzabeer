@@ -35,6 +35,8 @@ export default class Pizza extends Component {
 		     	})
       }
     )
+
+    Alert.alert("Tap the Pizza Icon or the Event Title for information on the event! Tap the map for directions!")
   }
   
   render () {
@@ -47,7 +49,7 @@ export default class Pizza extends Component {
     return (
       <Container>
       	<Content>
-      		<EventList 
+      		<EventList
       			events={this.state.pizzaList} 
       			svg={require('../svgs/Pizza.svg')}
       		/>

@@ -1,11 +1,16 @@
 {
   "expo": {
   	"name": "Grub.",
+  	"slug": "grub",
     "sdkVersion": "25.0.0",
     "icon": "./icon/GrubIcon.png",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "ios": {
-    	"bundleIdentifier": "com.companyname.appname"
+    	"bundleIdentifier": "com.nocompanyname.officialappnameisgrub",
+    	"infoPlist": {
+			  "NSLocationAlwaysUsageDescription": "Grub uses your location to find places near you that offer free pizza and beer!",
+				"NSLocationWhenInUseUsageDescription":  "Grub uses your location to find places near you that offer free pizza and beer!"
+			}
     }
   }
 }

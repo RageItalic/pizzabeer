@@ -35,6 +35,8 @@ export default class Beer extends Component {
 		     	})
       }
     )
+
+    Alert.alert("Tap the Beer Icon or the Event Title for information on the event! Tap the map for directions!")
   }
 
   render () {
@@ -56,3 +58,4 @@ export default class Beer extends Component {
     )
   }
 }
+
